@@ -2,11 +2,11 @@
   "rewrites": [
     {
       "source": "/stlaf-api/:path*",
-      "destination": "http://localhost:80/stlaf-api/:path*"
+      "destination": "https://your-api-domain.com/stlaf-api/:path*"
     },
     {
-      "source": "/(.*)",
-      "destination": "/"
+      "source": "/((?!stlaf-api/).*)",
+      "destination": "/index.html"
     }
   ]
 }
