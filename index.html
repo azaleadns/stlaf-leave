@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STLAF - Leave and Overtime System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="/src/style.css">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body class="text-slate-800">
+    <div id="login-page" class="min-h-screen flex flex-col items-center justify-center p-4">
+        <h1 class="login-brand-name"> <span>ST</span><span class="gold-text">LAF</span> </h1>
+        <p class="login-brand-sub">LEAVE AND OVERTIME SYSTEM</p>
+        <div class="card p-10 w-full max-w-md shadow-2xl bg-transparent border-2 border-white/50 rounded-xl">
+            <h2 class="text-center text-2xl font-bold mb-6 text-black">LOG IN</h2>
+
+
+            <label class="block text-xs font-bold mb-1">ROLE</label>
+            <select id="role-select" onchange="window.updateLoginFields()"
+                class="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#c5a021]">
+                <option value="" disabled selected>Select your role</option>
+                <option value="Employee">Requestor/Employee</option>
+                <option value="Approver">Approver</option>
+                <option value="superadmin">Payroll</option>
+            </select>
+            <div id="login-form-fields" class="space-y-1 mt-4"></div>
+            <button id="login-btn" onclick="window.handleLogin(event)" type="button"
+                class="w-full gold-bg text-white font-bold py-3 rounded-lg mt-6 hover:opacity-90 transition shadow-lg">
+                LOG IN
+            </button>
+        </div>
+    </div>
+    <div id="dashboard-container" class="hidden h-screen flex flex-col bg-[#f8f5f0]">
+        <nav class="bg-[#1e293b] text-white p-4 flex justify-between items-center flex-none font-serif">
+            <h2 class="font-bold text-[25px] uppercase tracking-wider text-white"> ST<span class="gold-text">LAF</span>
+                - <span id="portal-name" class="text-[15px] text-white">PORTAL</span> </h2>
+            <div class="flex items-center gap-4">
+                <div class="flex flex-col items-end leading-tight"> <span id="user-display-name"
+                        class="font-bold text-white text-base"></span> <span id="user-display-position"
+                        class="text-yellow-500 font-bold text-[12px] uppercase tracking-wider"></span> </div> <button
+                    onclick="logout()"
+                    class="border border-slate-400 px-4 py-1 rounded-md text-xs font-bold hover:bg-white hover:text-slate-800 transition uppercase">
+                    Logout </button>
+            </div>
+        </nav>
+
+        <main class="p-6 flex flex-col flex-1 min-h-0">
+
+            <div id="employee-layout" class="hidden flex-1 flex flex-col min-h-0 bg-[#f8f5f0]">
+                <div class="w-full max-w-6xl mx-auto px-6 pt-0 flex flex-col h-full">
+
+                    <div class="flex justify-between items-end mb-5">
+                        <div class="flex items-center gap-8">
+                            <div>
+                                <h2 class="text-4xl font-semi-bold font-[Poppins] text-white tracking-tight">
+                                    Dashboard</h2>
+                            </div>
+                        </div>
+
+                        <div
+                            class="flex flex-wrap justify-end gap-3 mb-2 text-[#3d587a] text-[10px] uppercase tracking-[0.2em] font-[Poppins]">
+
+                            <!-- REQUEST LEAVE -->
+                            <button type="button" onclick="window.openForm?.('leave')" class="relative overflow-hidden bg-[#c5a021] text-white
+        px-5 py-2 rounded-xl text-[13px] font-semibold font-[Poppins]
+        shadow-[0_8px_25px_rgba(197,160,33,0.30)]
+        hover:shadow-[0_12px_35px_rgba(197,160,33,0.40)]
+        transition-all transform active:scale-95 whitespace-nowrap">
+
+                                <span class="relative z-10">+ Request Leave</span>
+
+                                <span class="absolute inset-0 bg-gradient-to-r from-white/25 via-white/10 to-transparent
+            opacity-0 hover:opacity-100 transition"></span>
+                            </button>
+
+                            <!-- OVERTIME -->
+                            <button type="button" onclick="window.openForm?.('ot')" class="relative overflow-hidden bg-[#c5a021] text-white
+        px-5 py-2 rounded-xl text-[13px] font-semibold font-[Poppins]
+        shadow-[0_8px_25px_rgba(197,160,33,0.30)]
+        hover:shadow-[0_12px_35px_rgba(197,160,33,0.40)]
+        transition-all transform active:scale-95 whitespace-nowrap">
+
+                                <span class="relative z-10">+ File Overtime</span>
+
+                                <span class="absolute inset-0 bg-gradient-to-r from-white/25 via-white/10 to-transparent
+            opacity-0 hover:opacity-100 transition"></span>
+                            </button>
+
+                            <!-- OB / FIELD -->
+                            <button type="button" onclick="window.openForm?.('ob')" class="relative overflow-hidden bg-[#c5a021] text-white
+        px-5 py-2 rounded-xl text-[13px] font-semibold font-[Poppins]
+        shadow-[0_8px_25px_rgba(197,160,33,0.30)]
+        hover:shadow-[0_12px_35px_rgba(197,160,33,0.40)]
+        transition-all transform active:scale-95 whitespace-nowrap">
+
+                                <span class="relative z-10">+ OB / Field</span>
+
+                                <span class="absolute inset-0 bg-gradient-to-r from-white/25 via-white/10 to-transparent
+            opacity-0 hover:opacity-100 transition"></span>
+                            </button>
+
+                        </div>
+                    </div>
+
+                    <div
+                        class="backdrop-blur-md bg-[#ffffffcc] rounded-2xl shadow-[0_12px_40px_rgba(26,38,52,0.10)] flex flex-col border border-[#1a263420] overflow-hidden flex-1 min-h-0 mb-4">
+
+                        <!-- HEADER -->
+                        <div
+                            class="flex justify-between items-center border-b border-[#1a263415] px-10 pt-4 flex-none font-[Poppins] bg-gradient-to-r from-[#1a2634]/5 to-transparent">
+
+                            <!-- TABS -->
+                            <div class="flex items-center gap-10">
+
+                                <button onclick="switchTab('leave')" id="tab-leave"
+                                    class="pb-3 text-[13px] font-semibold tracking-wide transition-all border-b-2 border-[#c5a021] text-[#1a2634] hover:text-[#c5a021]">
+                                    LEAVES
+                                </button>
+
+                                <button onclick="switchTab('ot')" id="tab-ot"
+                                    class="pb-3 text-[13px] font-semibold tracking-wide transition-all border-b-2 border-transparent text-slate-500 hover:text-[#c5a021]">
+                                    OVERTIMES
+                                </button>
+
+                                <button onclick="switchTab('ut')" id="tab-ut"
+                                    class="pb-3 text-[13px] font-semibold tracking-wide transition-all border-b-2 border-transparent text-slate-500 hover:text-[#c5a021]">
+                                    UNDERTIME / HALFDAY
+                                </button>
+
+                                <button onclick="switchTab('ob')" id="tab-ob"
+                                    class="pb-3 text-[13px] font-semibold tracking-wide transition-all border-b-2 border-transparent text-slate-500 hover:text-[#c5a021]">
+                                    OB / FIELD
+                                </button>
+
+                            </div>
+
+                            <!-- YEAR FILTER -->
+                            <div class="flex items-center gap-2 pb-3">
+
+                                <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
+                                    Year
+                                </span>
+
+                                <select id="employee-year-filter" onchange="window.onEmployeeYearChange?.()" class="h-8 text-[11px] font-semibold uppercase tracking-wider border border-[#1a263420]
+                bg-white hover:bg-[#f8f9fb] rounded-lg px-3 outline-none text-[#1a2634] cursor-pointer shadow-sm">
+                                </select>
+
+                            </div>
+                        </div>
+
+                        <!-- CONTENT -->
+                        <div class="flex-1 overflow-y-auto custom-scrollbar relative font-[Poppins] bg-[#f8f9fb]">
+
+                            <!-- LEAVE -->
+                            <div id="leave-section">
+                                <table class="w-full text-left border-collapse">
+                                    <thead class="sticky top-0 z-10 bg-white shadow-sm">
+                                        <tr class="text-[#6b7280] text-[10px] uppercase font-bold tracking-[0.18em]">
+                                            <th class="py-5 px-4 border-b border-[#1a263410]">Type</th>
+                                            <th class="py-5 px-4 border-b border-[#1a263410]">Start Date</th>
+                                            <th class="py-5 px-4 border-b border-[#1a263410]">End Date</th>
+                                            <th class="py-5 px-4 border-b border-[#1a263410]">Reason</th>
+                                            <th class="py-5 px-4 border-b border-[#1a263410]">Reject Reason</th>
+                                            <th class="py-5 px-11 border-b border-[#1a263410]">Status</th>
+                                            <th class="py-5 px-4 border-b border-[#1a263410] text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="leave-table-body" class="text-[#1f2937] text-[13px]"></tbody>
+                                </table>
+                            </div>
+
+                            <!-- OT -->
+                            <div id="ot-section" class="hidden">
+                                <table class="w-full text-left border-collapse">
+                                    <thead class="sticky top-0 z-10 bg-white shadow-sm">
+                                        <tr class="text-[#6b7280] text-[10px] uppercase font-bold tracking-[0.18em]">
+                                            <th class="py-5 px-4 border-b border-[#1a263410]">Date</th>
+                                            <th class="py-5 px-4 border-b border-[#1a263410]">Hours</th>
+                                            <th class="py-5 px-4 border-b border-[#1a263410]">Reason</th>
+                                            <th class="py-5 px-4 border-b border-[#1a263410]">Reject Reason</th>
+                                            <th class="py-5 px-11 border-b border-[#1a263410]">Status</th>
+                                            <th class="py-5 px-4 border-b border-[#1a263410] text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="ot-table-body" class="text-[#1f2937] text-[13px]"></tbody>
+                                </table>
+                            </div>
+
+                            <!-- UT -->
+                            <div id="ut-section" class="hidden">
+                                <table class="w-full text-left border-collapse">
+                                    <thead class="sticky top-0 z-10 bg-white shadow-sm">
+                                        <tr class="text-[#6b7280] text-[10px] uppercase font-bold tracking-[0.18em]">
+                                            <th class="py-5 px-4 border-b border-[#1a263410]">Type</th>
+                                            <th class="py-5 px-4 border-b border-[#1a263410]">Date</th>
+                                            <th class="py-5 px-4 border-b border-[#1a263410]">Start Time</th>
+                                            <th class="py-5 px-4 border-b border-[#1a263410]">End Time</th>
+                                            <th class="py-5 px-4 border-b border-[#1a263410]">Reason</th>
+                                            <th class="py-5 px-4 border-b border-[#1a263410]">Reject Reason</th>
+                                            <th class="py-5 px-11 border-b border-[#1a263410]">Status</th>
+                                            <th class="py-5 px-4 border-b border-[#1a263410] text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="ut-table-body" class="text-[#1f2937] text-[13px]"></tbody>
+                                </table>
+                            </div>
+
+                            <!-- OB -->
+                            <div id="ob-section" class="hidden">
+                                <table class="w-full text-left border-collapse">
+                                    <thead class="sticky top-0 z-10 bg-white shadow-sm">
+                                        <tr class="text-[#6b7280] text-[10px] uppercase font-bold tracking-[0.18em]">
+                                            <th class="py-5 px-4 border-b border-[#1a263410]">Purpose</th>
+                                            <th class="py-5 px-4 border-b border-[#1a263410]">Date</th>
+                                            <th class="py-5 px-4 border-b border-[#1a263410]">Time In</th>
+                                            <th class="py-5 px-4 border-b border-[#1a263410]">Time Out</th>
+                                            <th class="py-5 px-11 border-b border-[#1a263410]">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="ob-table-body" class="text-[#1f2937] text-[13px]"></tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="approver-layout" class="hidden flex-1 flex flex-col min-h-0 bg-[#f8f5f0]">
+                <div class="w-full max-w-6xl mx-auto px-6 pt-0 flex flex-col h-full">
+
+                    <div class="flex justify-between items-end mb-4 flex-none">
+                        <h2 class="text-4xl font-semi-bold font-[Poppins] text-white tracking-tight">Approvals</h2>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-5 flex-none font-[Poppins]">
+                        <div
+                            class="relative overflow-hidden bg-white p-5 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 flex flex-col justify-center h-[100px] transition-all hover:shadow-md">
+                            <div
+                                class="absolute top-0 right-0 w-24 h-24 -mr-8 -mt-8 bg-amber-50 rounded-full opacity-50">
+                            </div>
+                            <div class="relative z-10 flex items-center justify-between">
+                                <div>
+                                    <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.15em] mb-3">
+                                        Pending Requests</p>
+                                    <h3 id="approver-total-pending"
+                                        class="text-3xl font-black text-[#1e293b] leading-none tracking-tight">0</h3>
+                                </div>
+                                <div class="h-12 w-12 bg-amber-100 rounded-xl flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-600" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="relative overflow-hidden bg-white p-5 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 flex flex-col justify-center h-[100px] transition-all hover:shadow-md ">
+                            <div
+                                class="absolute top-0 right-0 w-24 h-24 -mr-8 -mt-8 bg-emerald-50 rounded-full opacity-50">
+                            </div>
+                            <div class="relative z-10 flex items-center justify-between">
+                                <div>
+                                    <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.15em] mb-3">
+                                        Total Processed</p>
+                                    <h3 id="approver-total-processed"
+                                        class="text-3xl font-black text-[#1e293b] leading-none tracking-tight">0</h3>
+                                </div>
+                                <div class="h-12 w-12 bg-emerald-100 rounded-xl flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-600" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white/80 backdrop-blur-xl font-[Poppins]
+            rounded-2xl shadow-[0_12px_40px_rgba(26,38,52,0.10)]
+            flex flex-col border border-[#1a263420] overflow-hidden flex-1 min-h-0 mb-6">
+
+                        <!-- TABS -->
+                        <div
+                            class="flex justify-between items-center border-b border-[#1a263410] px-8 pt-4 flex-none bg-gradient-to-r from-[#1a2634]/5 to-transparent">
+
+                            <div class="flex gap-8">
+
+                                <button id="tab-pending-leave" onclick="switchApproverTab('pending-leave')"
+                                    class="pb-4 text-[11px] font-bold border-b-2 border-[#c5a021] text-[#1a2634]">
+                                    PENDING LEAVES
+                                </button>
+
+                                <button id="tab-pending-ot" onclick="switchApproverTab('pending-ot')"
+                                    class="pb-4 text-[11px] font-bold border-b-2 border-transparent text-slate-400 hover:text-[#1a2634]">
+                                    PENDING OVERTIME
+                                </button>
+
+                                <button id="tab-all-leave" onclick="switchApproverTab('all-leave')"
+                                    class="pb-4 text-[11px] font-bold border-b-2 border-transparent text-slate-400 hover:text-[#1a2634]">
+                                    LEAVE HISTORY
+                                </button>
+
+                                <button id="tab-all-ot" onclick="switchApproverTab('all-ot')"
+                                    class="pb-4 text-[11px] font-bold border-b-2 border-transparent text-slate-400 hover:text-[#1a2634]">
+                                    OVERTIME HISTORY
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        <!-- TABLE -->
+                        <div class="px-4 pb-4 flex-1 overflow-y-auto custom-scrollbar bg-[#f8f9fb]">
+
+                            <table class="w-full text-left border-collapse">
+
+                                <thead class="sticky top-0 z-10 bg-white/90 backdrop-blur-md">
+                                    <tr id="approver-thead-row"
+                                        class="text-slate-500 text-[10px] uppercase font-bold tracking-[0.18em]">
+
+                                        <th class="py-5 px-4 border-b border-[#1a263410]">Employee</th>
+                                        <th class="py-5 px-4 border-b border-[#1a263410]">Type</th>
+                                        <th class="py-5 px-4 border-b border-[#1a263410]">Period/Hours</th>
+                                        <th class="py-5 px-4 border-b border-[#1a263410]">Reason</th>
+                                        <th class="py-5 px-4 border-b border-[#1a263410] text-center">Action</th>
+
+                                    </tr>
+                                </thead>
+
+                                <tbody id="approver-table-body"
+                                    class="text-[#1f2937] text-[12px] divide-y divide-[#1a263410]">
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="admin-layout" class="hidden flex-1 flex flex-col min-h-0 bg-[#f8f9fb]">
+
+                <div class="w-full max-w-6xl mx-auto px-6 pt-0 flex flex-col h-full">
+
+                    <!-- HEADER -->
+                    <div class="flex justify-between items-end mb-5 flex-none">
+
+                        <h2 class="text-4xl font-[Poppins] font-bold text-white tracking-tight">
+                            System Administration
+                        </h2>
+
+                        <button onclick="window.openEmployeeForm('add')" class="relative overflow-hidden bg-[#c5a021] text-white px-6 py-2.5 rounded-xl text-[15px] font-[Poppins] 
+                        font-semibold shadow-[0_8px_25px_rgba(197,160,33,0.30)] hover:shadow-[0_12px_35px_rgba(197,160,33,0.40)]
+                        transition-all transform active:scale-95">
+
+                            <span class="relative z-10 tracking-wide">
+                                + Add Employee
+                            </span>
+
+                            <!-- Glass shine effect -->
+                            <span
+                                class="absolute inset-0 bg-gradient-to-r from-white/25 via-white/10 to-transparent opacity-0 hover:opacity-100 transition"></span>
+
+                        </button>
+
+                    </div>
+
+                    <!-- KPI CARDS (RESTORED ORIGINAL STYLE) -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-3 flex-none font-[Poppins]">
+
+                        <!-- Total Employees -->
+                        <div class="relative overflow-hidden bg-white p-5 rounded-2xl
+                shadow-[0_8px_30px_rgb(0,0,0,0.04)]
+                border border-slate-100 flex flex-col justify-center h-[100px]
+                transition-all hover:shadow-md">
+
+                            <div
+                                class="absolute top-0 right-0 w-24 h-24 -mr-8 -mt-8 bg-blue-50 rounded-full opacity-50">
+                            </div>
+
+                            <div class="relative z-10 flex items-center justify-between">
+
+                                <div>
+                                    <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.15em] mb-3">
+                                        Total Employees
+                                    </p>
+                                    <h3 id="admin-total-employees"
+                                        class="text-3xl font-black text-[#1e293b] leading-none tracking-tight">
+                                        0
+                                    </h3>
+                                </div>
+
+                                <div class="h-12 w-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    </svg>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- Total Filed -->
+                        <div class="relative overflow-hidden bg-white p-5 rounded-2xl
+                shadow-[0_8px_30px_rgb(0,0,0,0.04)]
+                border border-slate-100 flex flex-col justify-center h-[100px]
+                transition-all hover:shadow-md">
+
+                            <div
+                                class="absolute top-0 right-0 w-24 h-24 -mr-8 -mt-8 bg-indigo-50 rounded-full opacity-50">
+                            </div>
+
+                            <div class="relative z-10 flex items-center justify-between">
+
+                                <div>
+                                    <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.15em] mb-3">
+                                        Total Filed
+                                    </p>
+                                    <h3 id="admin-total-filed"
+                                        class="text-3xl font-black text-[#1e293b] leading-none tracking-tight">
+                                        0
+                                    </h3>
+                                </div>
+
+                                <div class="h-12 w-12 bg-indigo-100 rounded-xl flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- MAIN PANEL -->
+                    <div class="bg-white/80 backdrop-blur-xl font-[Poppins]
+            rounded-2xl shadow-[0_12px_40px_rgba(26,38,52,0.10)]
+            flex flex-col border border-[#1a263420] overflow-hidden flex-1 min-h-0">
+
+                        <!-- TABS + SEARCH -->
+                        <div
+                            class="flex flex-col gap-4 border-b border-[#1a263410] px-8 pt-3 pb-2 flex-none md:flex-row md:items-end md:justify-between">
+
+                            <!-- TABS -->
+                            <div class="flex flex-wrap gap-10">
+
+                                <button onclick="switchAdminTab('all-leaves')" id="tab-admin-leaves"
+                                    class="pb-3 text-[13px] font-bold border-b-2 border-[#c5a021] text-[#1a2634] hover:text-[#c5a021]">
+                                    ALL LEAVES
+                                </button>
+
+                                <button onclick="switchAdminTab('all-overtime')" id="tab-admin-ot"
+                                    class="pb-3 text-[13px] font-bold border-b-2 border-transparent text-slate-400 hover:text-[#c5a021]">
+                                    ALL OVERTIME
+                                </button>
+
+                                <button onclick="switchAdminTab('all-ob')" id="tab-admin-ob"
+                                    class="pb-3 text-[13px] font-bold border-b-2 border-transparent text-slate-400 hover:text-[#c5a021]">
+                                    ALL OB / FIELD
+                                </button>
+
+                                <button onclick="switchAdminTab('manage-users')" id="tab-admin-users"
+                                    class="pb-3 text-[13px] font-bold border-b-2 border-transparent text-slate-400 hover:text-[#c5a021]">
+                                    MANAGE USERS
+                                </button>
+
+                            </div>
+
+                            <!-- SEARCH -->
+                            <div
+                                class="flex items-center bg-white border border-[#1a263420] rounded-full shadow-sm p-1">
+
+                                <input type="text" id="admin-search-input" oninput="window.refreshEmployeeData()"
+                                    class="flex-1 py-1.5 px-3 bg-transparent outline-none text-[13px] text-[#1a2634] placeholder:text-slate-400"
+                                    placeholder="Search..." />
+
+                                <select id="month-filter" onchange="window.refreshEmployeeData()"
+                                    class="text-[10px] font-bold uppercase text-slate-500 bg-transparent border-none">
+
+                                    <option value="all">MONTH</option>
+                                    <option value="01">JAN</option>
+                                    <option value="02">FEB</option>
+                                    <option value="03">MAR</option>
+                                    <option value="04">APR</option>
+                                    <option value="05">MAY</option>
+                                    <option value="06">JUN</option>
+                                    <option value="07">JUL</option>
+                                    <option value="08">AUG</option>
+                                    <option value="09">SEP</option>
+                                    <option value="10">OCT</option>
+                                    <option value="11">NOV</option>
+                                    <option value="12">DEC</option>
+
+                                </select>
+
+                                <select id="year-filter" onchange="window.refreshEmployeeData()"
+                                    class="text-[10px] font-bold uppercase text-slate-500 bg-transparent border-none">
+
+                                    <option value="2026">2026</option>
+                                    <option value="2027">2027</option>
+                                    <option value="2028">2028</option>
+
+                                </select>
+
+                                <button onclick="window.refreshEmployeeData()"
+                                    class="bg-[#1a2634] hover:bg-[#243447] text-white px-4 py-1.5 rounded-full text-[10px] font-bold ml-2">
+                                    GO
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        <!-- TABLE -->
+                        <div class="px-5 flex-1 overflow-y-auto custom-scrollbar bg-[#f8f9fb]">
+
+                            <table class="w-full text-left border-collapse">
+
+                                <thead class="sticky top-0 z-10 bg-white/90 backdrop-blur-md shadow-sm">
+                                    <tr id="admin-table-header"
+                                        class="text-slate-500 text-[10px] uppercase font-bold tracking-[0.18em]">
+                                    </tr>
+                                </thead>
+
+                                <tbody id="admin-table-body"
+                                    class="text-[#1f2937] text-[13px] divide-y divide-[#1a263410]">
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div id="form-container"
+                class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50">
+                <div class="bg-[#f8f5f0] rounded-2xl p-8 w-full max-w-lg shadow-2xl border-t-8 border-[#c5a021]">
+                    <h2 id="form-title" class="text-2xl font-bold mb-6 text-slate-800 border-b pb-2">File Request</h2>
+                    <div id="form-fields" class="space-y-4"></div>
+                    <div id="validation-error" class="hidden text-red-500 text-xs font-bold mt-2">Please fill up all
+                        required fields</div>
+
+                    <div class="flex gap-3 mt-3">
+                        <button onclick="closeForm()"
+                            class="flex-1 py-3 border-2 border-slate-300 rounded-lg font-bold text-slate-500 hover:bg-slate-100 transition">CANCEL</button>
+                        <button type="button" id="submit-form-btn" onclick="window.submitForm()"
+                            class="flex-1 py-3 gold-bg text-white rounded-lg font-bold hover:opacity-90 transition shadow-lg">SUBMIT</button>
+                    </div>
+                </div>
+            </div>
+            <div id="custom-popup"
+                class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-[100] p-4">
+                <div
+                    class="bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl transform transition-all scale-95 border-t-4 border-[#c5a021]">
+                    <div id="popup-icon" class="mb-4 flex justify-center"></div>
+                    <h3 id="popup-title" class="text-center text-lg font-bold text-slate-800 mb-2"></h3>
+                    <p id="popup-message" class="text-center text-slate-500 text-sm mb-6"></p>
+                    <div id="popup-buttons" class="flex gap-3"></div>
+                </div>
+            </div>
+            <script type="module" src="/src/main.jsx"></script>
+</body>
+
+</html>
