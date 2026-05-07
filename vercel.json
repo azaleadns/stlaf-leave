@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/stlaf-api/:path*",
+      "destination": "http://localhost:80/stlaf-api/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/"
+    }
+  ]
+}
