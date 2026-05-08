@@ -1,7 +1,7 @@
 // ==========================================
 // 1. CONFIGURATION & GLOBALS
 // ==========================================
-const API_BASE_URL = 'http://192.168.100.44/stlaf-api';
+  const API_BASE_URL = 'https://stlaf-api.onrender.com';  
 
 if (typeof window.showPopup === "undefined") {
   window.showPopup = function ({ title, message, type }) {
@@ -1676,63 +1676,46 @@ window.updateLoginFields = function () {
 };
 
 window.handleLogin = async function (event) {
+  // Prevent form reload
   event?.preventDefault?.();
 
+  console.log("handleLogin triggered");
+
+  // ===== 2. GET FORM DATA =====
+  const roleEl = document.getElementById("role-select");
+  const role = roleEl?.value?.trim() || "";
+
+  const usernameEl = document.getElementById("employee_id");
+  const username = usernameEl?.value?.trim() || "";
+
+  const passwordEl = document.getElementById("password");
+  const password = passwordEl?.value || "";
+
+  const loginBtn = document.getElementById("login-btn");
+  const oldText = loginBtn?.innerHTML;
+
+  // ===== 3. VALIDATION =====
+  if (!role) {
+    showPopup({ title: "Warning", message: "Please select a role.", type: "danger" });
+    roleEl?.focus();
+    return;
+  }
+
+  if (!username) {
+    let fieldName = role === "Employee" ? "ID Number" : (role === "Approver" ? "Department" : "Username");
+    showPopup({ title: "Warning", message: `Please enter/select your ${fieldName}.`, type: "danger" });
+    usernameEl?.focus();
+    return;
+  }
+
+  if (!password) {
+    showPopup({ title: "Warning", message: "Please enter your password.", type: "danger" });
+    passwordEl?.focus();
+    return;
+  }
+
   try {
-    console.log("handleLogin triggered");
-
-    const roleEl = document.getElementById("role-select");
-    const role = roleEl?.value?.trim() || "";
-
-    const usernameEl = document.getElementById("employee_id");
-    const username = usernameEl?.value?.trim() || "";
-
-    const passwordEl = document.getElementById("password");
-    const password = passwordEl?.value || "";
-
-    console.log("role:", role);
-    console.log("username:", username);
-    console.log("password exists:", !!password);
-
-    // ===== VALIDATION =====
-    if (!role) {
-      showPopup({
-        title: "Warning",
-        message: "Please select a role.",
-        type: "danger",
-      });
-      roleEl?.focus();
-      return;
-    }
-
-    if (!username) {
-      let fieldName = "Username";
-      if (role === "Employee") fieldName = "ID Number";
-      if (role === "Approver") fieldName = "Department";
-
-      showPopup({
-        title: "Warning",
-        message: `Please enter/select your ${fieldName}.`,
-        type: "danger",
-      });
-      usernameEl?.focus();
-      return;
-    }
-
-    if (!password) {
-      showPopup({
-        title: "Warning",
-        message: "Please enter your password.",
-        type: "danger",
-      });
-      passwordEl?.focus();
-      return;
-    }
-
-    // ===== LOADING STATE =====
-    const loginBtn = document.getElementById("login-btn");
-    const oldText = loginBtn?.innerHTML;
-
+    // ===== 4. START LOADING STATE =====
     if (loginBtn) {
       loginBtn.disabled = true;
       loginBtn.innerHTML = `
@@ -1743,37 +1726,36 @@ window.handleLogin = async function (event) {
       `;
     }
 
-    // ===== SEND REQUEST =====
+    // ===== 5. SEND REQUEST TO RENDER =====
     const response = await fetch(`${API_BASE_URL}/login.php`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        username,
-        password,
-        role,
+        username: username,
+        password: password,
+        role: role,
       }),
     });
 
+    // Get the raw text first (to catch PHP errors that aren't JSON)
     const rawText = await response.text();
-    console.log("RAW RESPONSE:", rawText);
+    console.log("RAW RESPONSE FROM SERVER:", rawText);
 
     let result;
     try {
       result = JSON.parse(rawText);
-    } catch {
-      throw new Error("Invalid JSON response from server: " + rawText);
+    } catch (e) {
+      throw new Error("Server sent an invalid response. Check Render logs.");
     }
 
-    if (!response.ok) {
-      throw new Error(result.message || `HTTP Error ${response.status}`);
-    }
-
-    // ===== SUCCESS =====
+    // ===== 6. HANDLE RESPONSE =====
     if (result.success) {
+      // Login Successful
       const user = result.user || {};
 
+      // Save to LocalStorage
       localStorage.setItem("logged_user_id", user.id_number || "");
       localStorage.setItem("logged_user_name", user.name || "");
       localStorage.setItem("logged_user_role", user.role || role);
@@ -1786,39 +1768,44 @@ window.handleLogin = async function (event) {
         type: "success",
       });
 
+      // Redirect or Reload after a short delay
       setTimeout(() => {
-        location.reload();
-      }, 800);
-      return;
+        location.reload(); 
+      }, 1000);
+
+    } else {
+      // Login Failed (Wrong credentials)
+      showPopup({
+        title: "Login Failed",
+        message: result.message || "Invalid credentials.",
+        type: "danger",
+      });
+      
+      // Reset Button
+      if (loginBtn) {
+        loginBtn.disabled = false;
+        loginBtn.innerHTML = oldText;
+      }
     }
 
-    // ===== FAILED =====
+  } catch (err) {
+    // ===== 7. HANDLE NETWORK/SERVER ERRORS =====
+    console.error("handleLogin error:", err);
+
     showPopup({
-      title: "Login Failed",
-      message: result.message || "Invalid login.",
+      title: "Connection Error",
+      message: "Could not connect to the server. Please try again later.",
       type: "danger",
     });
 
+    // Reset Button
     if (loginBtn) {
       loginBtn.disabled = false;
       loginBtn.innerHTML = oldText || "LOG IN";
     }
-  } catch (err) {
-    console.error("handleLogin error:", err);
-
-    showPopup({
-      title: "Error",
-      message: err.message || "Unknown error",
-      type: "danger",
-    });
-
-    const loginBtn = document.getElementById("login-btn");
-    if (loginBtn) {
-      loginBtn.disabled = false;
-      loginBtn.innerHTML = "LOG IN";
-    }
-  }
+  };
 };
+
 
 // ==========================================
 // VERIFY FUNCTIONS LOADED
