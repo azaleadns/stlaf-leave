@@ -1773,21 +1773,17 @@ window.handleLogin = async function (event) {
         location.reload(); 
       }, 1000);
 
-    } else {
-      // Login Failed (Wrong credentials)
-      showPopup({
-        title: "Login Failed",
-        message: result.message || "Invalid credentials.",
-        type: "danger",
-      });
-      
-      // Reset Button
-      if (loginBtn) { 
-        loginBtn.disabled = false;
-        loginBtn.innerHTML = oldText;
-      }
-    }
+    // ===== FAILED =====
+    showPopup({
+      title: "Login Failed",
+      message: result.message || "Invalid login.",
+      type: "danger",
+    });
 
+    if (loginBtn) {
+      loginBtn.disabled = false;
+      loginBtn.innerHTML = oldText || "LOG IN";
+    }
   } catch (err) {
     // ===== 7. HANDLE NETWORK/SERVER ERRORS =====
     console.error("handleLogin error:", err);
