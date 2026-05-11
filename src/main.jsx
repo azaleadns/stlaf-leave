@@ -1772,6 +1772,7 @@ window.handleLogin = async function (event) {
       setTimeout(() => {
         location.reload(); 
       }, 1000);
+    }
 
     // ===== FAILED =====
     showPopup({
