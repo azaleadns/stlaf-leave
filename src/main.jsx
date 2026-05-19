@@ -1066,33 +1066,41 @@ window.openEmployeeForm = (mode, employeeData = null) => {
           placeholder=" ">
       </div>
 
-      <div>
-        <label class="block text-xs font-bold mb-1 uppercase tracking-wider text-black">Department</label>
-        <select id="emp_dept"
-          class="w-full border p-2 rounded focus:ring-2 focus:ring-[#c5a021] outline-none text-slate-600">
-          <option value="" disabled>Select department</option>
-          ${depts.map(d => `<option value="${d}" ${employeeData?.department === d ? 'selected' : ''}>${d}</option>`).join('')}
-        </select>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-[10px] font-bold mb-1 uppercase tracking-wider text-black">Department</label>
+          <select id="emp_dept"
+            class="w-full border p-2 rounded focus:ring-2 focus:ring-[#c5a021] outline-none text-slate-600 text-sm">
+            <option value="" disabled>Select department</option>
+            ${depts.map(d => `<option value="${d}" ${employeeData?.department === d ? 'selected' : ''}>${d}</option>`).join('')}
+          </select>
+        </div>
+        <div>
+          <label class="block text-[10px] font-bold mb-1 uppercase tracking-wider text-black">Role</label>
+          <select id="emp_role"
+            class="w-full border p-2 rounded focus:ring-2 focus:ring-[#c5a021] outline-none text-slate-600 text-sm">
+            <option value="Employee" ${(employeeData?.role || '').toLowerCase() !== 'approver' ? 'selected' : ''}>Employee</option>
+            <option value="Approver" ${(employeeData?.role || '').toLowerCase() === 'approver' ? 'selected' : ''}>Approver</option>
+          </select>
+        </div>
       </div>
 
-      <div>
-        <label class="block text-[10px] font-bold mb-1 uppercase tracking-wider text-black">Position</label>
-        <input type="text" id="emp_pos"
-          value="${employeeData?.position || ''}"
-          class="w-full border p-2 rounded focus:ring-2 focus:ring-[#c5a021] outline-none text-sm"
-          placeholder=" ">
-      </div>
-
-      <div>
-        <label class="block text-[10px] font-bold mb-1 uppercase tracking-wider text-black">ID Number</label>
-        <input type="text"
-          id="emp_username"
-          value="${currentID}"
-          placeholder=" "
-          class="w-full border p-2 rounded focus:ring-2 focus:ring-[#c5a021] outline-none text-sm">
-        <p class="text-[10px] text-slate-400 mt-1 italic">
-          * Accepts numeric (00-00000) or alphanumeric (APP/ADMIN) formats.
-        </p>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-[10px] font-bold mb-1 uppercase tracking-wider text-black">Position</label>
+          <input type="text" id="emp_pos"
+            value="${employeeData?.position || ''}"
+            class="w-full border p-2 rounded focus:ring-2 focus:ring-[#c5a021] outline-none text-sm"
+            placeholder=" ">
+        </div>
+        <div>
+          <label class="block text-[10px] font-bold mb-1 uppercase tracking-wider text-black">ID Number</label>
+          <input type="text"
+            id="emp_username"
+            value="${currentID}"
+            placeholder=" "
+            class="w-full border p-2 rounded focus:ring-2 focus:ring-[#c5a021] outline-none text-sm">
+        </div>
       </div>
 
       <div>
@@ -1843,7 +1851,7 @@ window.updateLoginFields = function () {
         id="employee_id"
         class="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#c5a021]"
       >
-        <option value="">Select Department</option>
+        <option value="" >Select Department</option>
         <option value="CCT">CCT</option>
         <option value="KST">KST</option>
         <option value="DCP">DCP</option>
