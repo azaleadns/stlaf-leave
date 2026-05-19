@@ -363,22 +363,39 @@
                             System Administration
                         </h2>
 
-                         <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-3">
 
-        <!-- ADD EMPLOYEE -->
-        <button onclick="window.openEmployeeForm('add')" class="relative overflow-hidden bg-[#c5a021] text-white px-6 py-2.5 rounded-xl text-[15px] font-[Poppins] 
+                            <!-- EXPORT MEMBERS (visible only on manage-users tab) -->
+                            <button id="btn-export-members" onclick="window.exportMembers()" class="hidden relative overflow-hidden bg-[#1a2634] hover:bg-[#243447] text-white px-5 py-2.5 rounded-xl text-[13px] font-[Poppins]
+        font-semibold shadow-[0_8px_25px_rgba(26,38,52,0.25)] hover:shadow-[0_12px_35px_rgba(26,38,52,0.35)]
+        transition-all transform active:scale-95 flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                </svg>
+                                Export Members
+                            </button>
+
+                            <!-- ADD MEMBER -->
+                            <button onclick="window.openEmployeeForm('add')" class="relative overflow-hid
+        
+        
+        
+        n bg-[#c5a021] text-white px-6 py-2.5 rounded-xl text-[15px] font-[Poppins] 
         font-semibold shadow-[0_8px_25px_rgba(197,160,33,0.30)] hover:shadow-[0_12px_35px_rgba(197,160,33,0.40)]
         transition-all transform active:scale-95">
 
-            <span class="relative z-10 tracking-wide">
-                + Add Employee
-            </span>
+                                <span class="relative z-10 tracking-wide">
+                                    + Add Member
+                                </span>
 
-            <span class="absolute inset-0 bg-gradient-to-r from-white/25 via-white/10 to-transparent opacity-0 hover:opacity-100 transition"></span>
+                                <span
+                                    class="absolute inset-0 bg-gradient-to-r from-white/25 via-white/10 to-transparent opacity-0 hover:opacity-100 transition"></span>
 
-        </button>
+                            </button>
 
-    </div>
+                        </div>
 
                     </div>
 
@@ -487,46 +504,61 @@
 
                             </div>
 
-                            <!-- SEARCH -->
-                            <div
-                                class="flex items-center bg-white border border-[#1a263420] rounded-full shadow-sm p-1">
+                            <!-- SEARCH + EXPORT REQUESTS -->
+                            <div class="flex items-center gap-2">
 
-                                <input type="text" id="admin-search-input" oninput="window.refreshEmployeeData()"
-                                    class="flex-1 py-1.5 px-3 bg-transparent outline-none text-[13px] text-[#1a2634] placeholder:text-slate-400"
-                                    placeholder="Search..." />
-
-                                <select id="month-filter" onchange="window.refreshEmployeeData()"
-                                    class="text-[10px] font-bold uppercase text-slate-500 bg-transparent border-none">
-
-                                    <option value="all">MONTH</option>
-                                    <option value="01">JAN</option>
-                                    <option value="02">FEB</option>
-                                    <option value="03">MAR</option>
-                                    <option value="04">APR</option>
-                                    <option value="05">MAY</option>
-                                    <option value="06">JUN</option>
-                                    <option value="07">JUL</option>
-                                    <option value="08">AUG</option>
-                                    <option value="09">SEP</option>
-                                    <option value="10">OCT</option>
-                                    <option value="11">NOV</option>
-                                    <option value="12">DEC</option>
-
-                                </select>
-
-                                <select id="year-filter" onchange="window.refreshEmployeeData()"
-                                    class="text-[10px] font-bold uppercase text-slate-500 bg-transparent border-none">
-
-                                    <option value="2026">2026</option>
-                                    <option value="2027">2027</option>
-                                    <option value="2028">2028</option>
-
-                                </select>
-
-                                <button onclick="window.refreshEmployeeData()"
-                                    class="bg-[#1a2634] hover:bg-[#243447] text-white px-4 py-1.5 rounded-full text-[10px] font-bold ml-2">
-                                    GO
+                                <!-- EXPORT REQUESTS BUTTON (hidden on manage-users) -->
+                                <button id="btn-export-requests" onclick="window.exportRequests()"
+                                    class="flex items-center gap-1.5 bg-[#1a2634] hover:bg-[#243447] text-white px-4 py-1.5 rounded-full text-[10px] font-bold transition whitespace-nowrap shadow-[0_4px_12px_rgba(26,38,52,0.25)]">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                    </svg>
+                                    Export CSV
                                 </button>
+
+                                <div
+                                    class="flex items-center bg-white border border-[#1a263420] rounded-full shadow-sm p-1">
+
+                                    <input type="text" id="admin-search-input" oninput="window.refreshEmployeeData()"
+                                        class="flex-1 py-1.5 px-3 bg-transparent outline-none text-[13px] text-[#1a2634] placeholder:text-slate-400"
+                                        placeholder="Search..." />
+
+                                    <select id="month-filter" onchange="window.refreshEmployeeData()"
+                                        class="text-[10px] font-bold uppercase text-slate-500 bg-transparent border-none">
+
+                                        <option value="all">MONTH</option>
+                                        <option value="01">JAN</option>
+                                        <option value="02">FEB</option>
+                                        <option value="03">MAR</option>
+                                        <option value="04">APR</option>
+                                        <option value="05">MAY</option>
+                                        <option value="06">JUN</option>
+                                        <option value="07">JUL</option>
+                                        <option value="08">AUG</option>
+                                        <option value="09">SEP</option>
+                                        <option value="10">OCT</option>
+                                        <option value="11">NOV</option>
+                                        <option value="12">DEC</option>
+
+                                    </select>
+
+                                    <select id="year-filter" onchange="window.refreshEmployeeData()"
+                                        class="text-[10px] font-bold uppercase text-slate-500 bg-transparent border-none">
+
+                                        <option value="2026">2026</option>
+                                        <option value="2027">2027</option>
+                                        <option value="2028">2028</option>
+
+                                    </select>
+
+                                    <button onclick="window.refreshEmployeeData()"
+                                        class="bg-[#1a2634] hover:bg-[#243447] text-white px-4 py-1.5 rounded-full text-[10px] font-bold ml-2">
+                                        GO
+                                    </button>
+
+                                </div>
 
                             </div>
 
@@ -557,9 +589,9 @@
             </div>
             <div id="form-container"
                 class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50">
-                <div class="bg-[#f8f5f0] rounded-2xl p-8 w-full max-w-lg shadow-2xl border-t-8 border-[#c5a021]">
-                    <h2 id="form-title" class="text-2xl font-bold mb-6 text-slate-800 border-b pb-2">File Request</h2>
-                    <div id="form-fields" class="space-y-4"></div>
+                <div class="bg-[#f8f5f0] rounded-2xl p-6 w-full max-w-lg shadow-2xl border-t-8 border-[#c5a021]">
+                    <h2 id="form-title" class="text-xl font-bold mb-4 text-slate-800 border-b pb-2">File Request</h2>
+                    <div id="form-fields" class="space-y-3"></div>
                     <div id="validation-error" class="hidden text-red-500 text-xs font-bold mt-2">Please fill up all
                         required fields</div>
 
