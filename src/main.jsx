@@ -1844,6 +1844,9 @@ window.updateLoginFields = function () {
         class="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#c5a021]"
       >
         <option value="">Select Department</option>
+        <option value="CCT">CCT</option>
+        <option value="KST">KST</option>
+        <option value="DCP">DCP</option>
         <option value="IT Department">IT Department</option>
         <option value="Human Resources Department">Human Resources Department</option>
         <option value="Accounting Department">Accounting Department</option>
