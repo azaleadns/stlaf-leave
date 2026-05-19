@@ -1041,6 +1041,9 @@ window.openEmployeeForm = (mode, employeeData = null) => {
   title.innerText = (mode === 'edit') ? "Edit Employee" : "Add New Employee";
 
   const depts = [
+    "CCT",
+    "KST",
+    "DCP",
     "IT Department",
     "Human Resources Department",
     "Accounting Department",
@@ -1067,7 +1070,7 @@ window.openEmployeeForm = (mode, employeeData = null) => {
         <label class="block text-xs font-bold mb-1 uppercase tracking-wider text-black">Department</label>
         <select id="emp_dept"
           class="w-full border p-2 rounded focus:ring-2 focus:ring-[#c5a021] outline-none text-slate-600">
-          <option value="" disabled>Select department</option>
+          <option value=" ">Select department</option>
           ${depts.map(d => `<option value="${d}" ${employeeData?.department === d ? 'selected' : ''}>${d}</option>`).join('')}
         </select>
       </div>
@@ -1618,6 +1621,9 @@ window.updateLoginFields = function () {
         class="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#c5a021]"
       >
         <option value="">Select Department</option>
+        <option value="CCT">CCT</option>
+        <option value="KCS">KCS</option>
+        <option value="DCP">DCP</option>
         <option value="IT Department">IT Department</option>
         <option value="Human Resources Department">Human Resources Department</option>
         <option value="Accounting Department">Accounting Department</option>
