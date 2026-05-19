@@ -1085,22 +1085,24 @@ window.openEmployeeForm = (mode, employeeData = null) => {
         </div>
       </div>
 
-      <div class="grid grid-cols-2 gap-3">
-        <div>
-          <label class="block text-[10px] font-bold mb-1 uppercase tracking-wider text-black">Position</label>
-          <input type="text" id="emp_pos"
-            value="${employeeData?.position || ''}"
-            class="w-full border p-2 rounded focus:ring-2 focus:ring-[#c5a021] outline-none text-sm"
-            placeholder=" ">
-        </div>
-        <div>
-          <label class="block text-[10px] font-bold mb-1 uppercase tracking-wider text-black">ID Number</label>
-          <input type="text"
-            id="emp_username"
-            value="${currentID}"
-            placeholder=" "
-            class="w-full border p-2 rounded focus:ring-2 focus:ring-[#c5a021] outline-none text-sm">
-        </div>
+      <div>
+        <label class="block text-[10px] font-bold mb-1 uppercase tracking-wider text-black">Position</label>
+        <input type="text" id="emp_pos"
+          value="${employeeData?.position || ''}"
+          class="w-full border p-2 rounded focus:ring-2 focus:ring-[#c5a021] outline-none text-sm"
+          placeholder=" ">
+      </div>
+
+      <div>
+        <label class="block text-[10px] font-bold mb-1 uppercase tracking-wider text-black">ID Number</label>
+        <input type="text"
+          id="emp_username"
+          value="${currentID}"
+          placeholder=" "
+          class="w-full border p-2 rounded focus:ring-2 focus:ring-[#c5a021] outline-none text-sm">
+        <p class="text-[10px] text-slate-400 mt-1 italic">
+          * Accepts numeric (00-00000) or alphanumeric (APP/ADMIN) formats.
+        </p>
       </div>
 
       <div>
