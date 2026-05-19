@@ -1071,7 +1071,7 @@ window.openEmployeeForm = (mode, employeeData = null) => {
           <label class="block text-[10px] font-bold mb-1 uppercase tracking-wider text-black">Department</label>
           <select id="emp_dept"
             class="w-full border p-2 rounded focus:ring-2 focus:ring-[#c5a021] outline-none text-slate-600 text-sm">
-            <option value="" disabled>Select department</option>
+            <option value=" " disabled selected>Select Department</option>
             ${depts.map(d => `<option value="${d}" ${employeeData?.department === d ? 'selected' : ''}>${d}</option>`).join('')}
           </select>
         </div>
