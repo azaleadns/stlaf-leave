@@ -858,12 +858,18 @@
         background: rgba(197, 160, 33, 0.04);
     }
 
-    #dashboard-container tbody td {
-        padding: 13px 16px;
-        border-bottom: 1px solid rgba(148, 163, 184, 0.10);
-        vertical-align: middle;
-        color: var(--navy);
-        font-size: 13px;
+    /* Approver Reason column: allow wrapping */
+    #approver-table-body td:nth-child(4),
+    #approver-table-body td:nth-child(5) {
+        white-space: normal;
+        overflow: visible;
+        word-break: break-word;
+    }
+    /* Approver Reason column: allow wrapping */
+    #approver-table-body td:nth-child(4) {
+        white-space: normal;
+        overflow: visible;
+        word-break: break-word;
     }
 
     #dashboard-container tbody tr:last-child td {
